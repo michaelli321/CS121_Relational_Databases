@@ -1,0 +1,132 @@
+You can put your answers for Problem 3 in this file.  Follow this notation for
+writing your answers in text format:
+
+ * You can write functional dependencies as A -> B
+
+ * You can write a set of functional dependencies as { A -> BC, C -> D }
+
+ * You can write attribute-set closure as {A}+ etc.
+
+ * You can write multivalued dependencies as A ->> B
+
+ * When writing relation schemas, you can indicate primary-key attributes
+   by enclosing them with underscores, e.g. R1(_A_, B, C), R2(_C_, D)
+
+ * Don't forget that primary key attributes should always come first
+   when writing relation schemas
+
+-- [Problem 3a]
+
+AC is a candidate key
+
+    {AC}+ = AC     initial state
+    {AC}+ = ABC    C -> B
+    {AC}+ = ABCG   C -> G
+    {AC}+ = ABCGI  CG -> I
+    {AC}+ = ABCGHI AB -> H
+
+AC only has two proper subsets, A and C
+
+    {A}+ = A    …and that’s as far as we can go
+
+    {C}+ = C     initial state
+    {C}+ = CG    C -> G
+    {C}+ = BCG   C -> B
+    {C}+ = BCGI  CG -> I, that’s as far as we can go
+
+AC is a minimal superkey; therefore it is a candidate key.
+
+-- [Problem 3b]
+
+Start with:
+    
+    F_c = F = {G -> B, AB -> H, C -> B, CG -> I, C -> G, G -> I}
+
+Step 1: Collapse down dependencies using Union Rule
+
+    F_c = {G -> BI, AB -> H, C -> BG, CG -> I}
+
+Step 2: B is extraneous in C -> BG
+
+    Proof: Take altered set:
+    F_c’ = {G -> BI, AB -> H, C -> G, CG -> I}
+    See if we can infer C -> B from F_c’. Compute {C}+
+    
+    {C}+ = C     initial state	
+    {C}+ = CG    C -> G
+    {C}+ = BCGI  G -> BI
+
+    Result contains B, so B is extraneous in C -> BG
+
+    Result: F_c = {G -> BI, AB -> H, C -> G, CG -> I}
+
+Step 3: G is extraneous in CG -> I
+
+    Proof: Take unaltered set:
+    F_c = {G -> BI, AB -> H, C -> G, CG -> I}
+    See if we can infer C -> I. We compute {C}+
+    See last problem for {C}+ (same set)
+
+    Result contains I, so G is extraneous in CG -> I
+
+    Result: F_c = {G -> BI, AB -> H, C -> G, C -> I}
+
+Step 4: Collapse down dependencies using Union Rule again 
+
+    (C -> G, and C -> I)
+
+    F_c = {G -> BI, AB -> H, C -> GI}
+
+Step 5: I is extraneous in C -> GI
+
+    Take altered set:
+    F_c’ = {G -> BI, AB -> H, C -> G}
+    See if we can infer C -> I. We compute {C}+
+    
+    {C}+ = C     initial state
+    {C}+ = CG    C -> G
+    {C}+ = BCGI  G -> BI
+
+    Result contains I, so I is extraneous in C -> GI
+   
+    Result: F_c = {G -> BI, AB -> H, C -> G}
+
+The final result is F_c = {G -> BI, AB -> H, C -> G}
+
+No two dependencies have the same left-hand side, and no dependency
+has any extraneous attributes.
+
+-- [Problem 3c]
+
+We have already computed the cover of F: F_c = {G -> BI, AB -> H, C -> G}
+
+Just run through the dependencies in left-to-right order:
+
+    R1(_G_, B, I)
+    R2(_A_, _B_, H)
+    R3(_C_, G)
+
+For each dependency alpha -> beta, (alpha union beta) isn’t contained 
+within any previous schema R_i, so each dependency gets its own 
+schema
+
+From part a) we computed that AC -> R, so AC is a candidate key for R.
+Since AC is not contained within any of these generated relations, 
+we must add a fourth schema:
+
+    R4(_A_, _C_)
+
+This is the complete 3NF decomposition of R.
+
+    R1(_G_, B, I)
+    R2(_A_, _B_, H)
+    R3(_C_, G)
+    R4(_A_, _C_)
+
+
+
+
+
+
+
+

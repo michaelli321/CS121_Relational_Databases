@@ -1,0 +1,45 @@
+You can put your answers for Problem 1.2 in this file.
+------------------------------------------------------
+
+audio_files(_file_id_, path, length)
+	* path is is unique
+
+promotions(_file_id_, promo_type, url)
+	* file_id is a foreign key to audio_files.file_id
+
+
+companies(_comp_id_, comp_name)
+	* comp_name is unique
+
+company_emails(comp_id, email_address)
+	* comp_id is a foreign key to companies.comp_id
+	* (comp_id, email_address) is the primary key
+
+Since each advertisement must be associated with a company,
+we combine the advertisements entity-set and the has_ad relationship-set.
+
+advertisements(_file_id_, schedule_start, schedule_end, price, comp_id)
+	* file_id is a foreign key to audio_files.file_id
+	* comp_id is a foreign key to companies.comp_id
+
+songs(_file_id_, intro_length, is_explicit)
+	* file_id is a foreign key to audio_files.file_id
+
+We combine the artists and sings_song entity sets since we know 
+that a song can have multiple artists. 
+
+artists(file_id, artist_name)
+	* (file_id, artist_name) is the primary key
+	* file_id is a foreign key to songs.file_id
+
+song_tags(file_id, tag)
+	* file_id is a foreign key to songs.file_id
+	* (file_id, tag) is the primary key
+
+Every entry in the play-list appears in the database, and since
+this is a weak entity set, we combine the playlist and in_playlist schemas.
+
+playlist(_file_id_, _start_time_, is_request)
+	* file_id is a foreign key to audio_files.file_id
+
+	

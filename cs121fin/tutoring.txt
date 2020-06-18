@@ -1,0 +1,70 @@
+You can put your answers for Problem 4 in this file.  Follow this notation for
+writing your answers in text format:
+
+ * You can write functional dependencies as A -> B
+
+ * You can write a set of functional dependencies as { A -> BC, C -> D }
+
+ * You can write attribute-set closure as {A}+ etc.
+
+ * You can write multivalued dependencies as A ->> B
+
+ * When writing relation schemas, you can indicate primary-key attributes
+   by enclosing them with underscores, e.g. R1(_A_, B, C), R2(_C_, D)
+
+ * Don't forget that primary key attributes should always come first
+   when writing relation schemas
+
+-- [Problem 4a]
+
+The most important functional and multivalued dependencies that
+hold on this database are 
+
+	tutor_id -> tutor_name, email, graduation_date
+	tutor_id ->> course_number, topic
+	course_number -> course_name
+
+The first one makes sense because each tutor has basic info that 
+can only be distinguished by a tutor’s ID that is unique to 
+only them. The tutor’s name, email and graduation_date 
+are all on a one to one dependency on the specific tutor we are referencing.
+tutor_id also has a multivalued dependency on course_number and topic.
+The two sides are independent of each other. tutor_id stays constant while 
+there are multiple course_number and topics that that tutor deals with. Lastly, 
+the course_number should have a functional dependency on the course_name. Each course
+number is unique to a specific course. Also it is worth noting that tutor_id is a 
+candidate key of this schema.
+
+
+-- [Problem 4b]
+Overall, I would say the schema is not a good design. Since we know that tutor_id 
+holds a multivalued dependency with course_number and topic, we will have a lot of
+repetition in the tutor_topics relation. There will be a lot of the same tutor_ids
+referring to the same course_number (because of various topics) which refers to the 
+same course_name. Overall, this is very bad design because of all the static repetition 
+in the table. Thus, we should split the second table up.
+
+
+-- [Problem 4c]
+A better design would be a 4NF design. So we would have:
+
+	tutors(_tutor_id_, name, email, graduation_date)
+	courses(_course_number_, course_name)
+	tutor_courses(_tutor_id_, _course_number_)
+		* tutor_id is a foreign key to tutors.tutor_id
+		* course_number is a foreign key to courses.course_number
+	tutor_topics(_tutor_id_, topic)
+		* tutor_id is a foreign key to tutors.tutor_id
+
+This is better than the original design because it fixes the issue brought up in problem
+4b. It eliminates all the excessive repetition in the second table and makes everything
+much more organized. It holds all dependencies as well, as the first table holds the first
+dependency mentioned in 4a, the second table holds the 3rd dependency mentioned in 4a and 
+the two latter tables deal with the multivalued dependencies using decomposition rule. This way,
+the course_id and names will all show up once in the courses table. The courses that each tutor 
+teaches will also all show up once in the tutor_courses table. The topics that each tutor teaches
+will also all be mentioned once each in this design. 
+	
+	
+
+
